@@ -14,6 +14,7 @@ func HTTPRouteInit(cont *container.Container, containerConf *container.Container
 	e.Use(middleware.AddTrailingSlash())
 	e.Use(middleware.Recover())
 	e.Use(LoggerMiddleware(e, *cont.Logger))
+	e.Validator = NewValidator()
 
 	port := fmt.Sprintf("%s:%d", containerConf.Apps.Host, containerConf.Apps.HttpPort)
 	e.Logger.Fatal(e.Start(port))
