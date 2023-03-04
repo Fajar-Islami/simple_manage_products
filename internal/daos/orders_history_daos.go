@@ -1,6 +1,8 @@
 package daos
 
 import (
+	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -19,3 +21,11 @@ type (
 		Descriptions  string
 	}
 )
+
+type OrderHistoryRepository interface {
+	GetAllOrderHistory(ctx context.Context, params FilterOrderHistory, userid int) (res []OrderHistory, err error)
+	GetOrderHistoryByID(ctx context.Context, historyid, userid int) (res OrderHistory, err error)
+	CreateOrderHistory(ctx context.Context, data OrderHistory, userid int) (res uint, err error)
+	UpdateOrderHistoryByID(ctx context.Context, historyid, userid int, data OrderHistory) (res string, err error)
+	DeleteOrderHistoryByID(ctx context.Context, historyid, userid string) (res string, err error)
+}
