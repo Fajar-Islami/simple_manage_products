@@ -11,9 +11,9 @@ type (
 		gorm.Model
 		Descriptions string     `gorm:"not null"`
 		UserID       uint       `gorm:"not null"`
-		User         User       `gorm:"foreignKey:UserID"`
+		User         User       `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 		OrderItemID  uint       `gorm:"not null"`
-		OrderItem    OrderItems `gorm:"foreignKey:OrderItemID"`
+		OrderItem    OrderItems `gorm:"foreignKey:OrderItemID;constraint:OnDelete:CASCADE"`
 	}
 
 	FilterOrderHistory struct {

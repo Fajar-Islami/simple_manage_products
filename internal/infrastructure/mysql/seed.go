@@ -24,7 +24,7 @@ func init() {
 	for i := 0; i < 5; i++ {
 		expireTime := time.Now().AddDate(0, 0, i)
 		orderItemsSeed = append(orderItemsSeed, daos.OrderItems{
-			Name:      fmt.Sprintf("Example order items %d", i),
+			Name:      fmt.Sprintf("Example Positive order items %d", i),
 			Price:     maxRandomPrice(),
 			ExpiredAt: &expireTime,
 		})
@@ -33,7 +33,7 @@ func init() {
 	for i := 5; i < 10; i++ {
 		expireTime := time.Now().AddDate(0, 0, -i)
 		orderItemsSeed = append(orderItemsSeed, daos.OrderItems{
-			Name:      fmt.Sprintf("Example order items %d", i),
+			Name:      fmt.Sprintf("Example Negative order items %d", i),
 			Price:     maxRandomPrice(),
 			ExpiredAt: &expireTime,
 		})

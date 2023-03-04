@@ -1,4 +1,4 @@
-package daos
+package dtos
 
 type (
 	LoginRequest struct {
@@ -13,6 +13,7 @@ type (
 	}
 
 	LoginResp struct {
+		DtosModel
 		Nama     string `json:"fullname"`
 		Username string `json:"username"`
 	}

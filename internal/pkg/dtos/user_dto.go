@@ -1,4 +1,4 @@
-package daos
+package dtos
 
 type (
 	FilterUsers struct {

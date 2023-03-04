@@ -1,4 +1,4 @@
-package daos
+package dtos
 
 type (
 	FilterOrderHistory struct {
@@ -8,6 +8,7 @@ type (
 	}
 
 	DataOrderHistory struct {
+		DtosModel
 		Description string `json:"description" validate:"required"`
 		OrderItemID string `json:"order_item_id" validate:"required"`
 	}

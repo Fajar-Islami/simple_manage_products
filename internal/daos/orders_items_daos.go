@@ -23,7 +23,7 @@ type (
 )
 
 type OrderItemsRepository interface {
-	GetAllOrderItems(ctx context.Context, params FilterOrderItems) (res []OrderItems, err error)
+	GetAllOrderItems(ctx context.Context, params FilterOrderItems) (res []OrderItems, count int64, err error)
 	GetOrderItemsByID(ctx context.Context, orderItemsid int) (res OrderItems, err error)
 	CreateOrderItems(ctx context.Context, data OrderItems) (res uint, err error)
 	UpdateOrderItemsByID(ctx context.Context, orderItemsid int, data OrderItems) (res string, err error)
