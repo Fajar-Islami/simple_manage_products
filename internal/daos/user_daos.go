@@ -13,7 +13,7 @@ type (
 		FullName   string `gorm:"not null;index"`
 		Username   string `gorm:"unique;not null"`
 		Password   string `gorm:"not null"`
-		FirstOrder time.Time
+		FirstOrder *time.Time
 	}
 
 	FilterUser struct {

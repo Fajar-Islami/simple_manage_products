@@ -1,4 +1,4 @@
-package orderitemscontroller
+package controller
 
 import (
 	"log"
@@ -20,17 +20,17 @@ type OrderItemsController interface {
 	DeleteOrderItemsByID(ctx echo.Context) error
 }
 
-type OrderItemsControllerImpl struct {
+type orderItemsControllerImpl struct {
 	orderitemsusecase usecase.OrderItemsUseCase
 }
 
 func NewOrderItemsController(orderitemsusecase usecase.OrderItemsUseCase) OrderItemsController {
-	return &OrderItemsControllerImpl{
+	return &orderItemsControllerImpl{
 		orderitemsusecase: orderitemsusecase,
 	}
 }
 
-func (oric *OrderItemsControllerImpl) GetAllOrderItems(ctx echo.Context) error {
+func (oric *orderItemsControllerImpl) GetAllOrderItems(ctx echo.Context) error {
 	filter := new(dtos.FilterOrderItems)
 	if err := ctx.Bind(filter); err != nil {
 		log.Println(err)
@@ -45,7 +45,7 @@ func (oric *OrderItemsControllerImpl) GetAllOrderItems(ctx echo.Context) error {
 	return helper.BuildResponse(ctx, true, helper.SUCCEEDGETDATA, "", res, http.StatusOK)
 }
 
-func (oric *OrderItemsControllerImpl) GetOrderItemsByID(ctx echo.Context) error {
+func (oric *orderItemsControllerImpl) GetOrderItemsByID(ctx echo.Context) error {
 	orderitemsid := ctx.Param("orderitemsid")
 	orderItemsIdInt, errConv := strconv.Atoi(orderitemsid)
 	if errConv != nil {
@@ -59,7 +59,7 @@ func (oric *OrderItemsControllerImpl) GetOrderItemsByID(ctx echo.Context) error 
 
 	return helper.BuildResponse(ctx, true, helper.SUCCEEDGETDATA, "", res, http.StatusOK)
 }
-func (oric *OrderItemsControllerImpl) CreateOrderItems(ctx echo.Context) error {
+func (oric *orderItemsControllerImpl) CreateOrderItems(ctx echo.Context) error {
 	params := new(dtos.ReqDataOrderItems)
 	if err := ctx.Bind(params); err != nil {
 		log.Println(err)
@@ -73,7 +73,7 @@ func (oric *OrderItemsControllerImpl) CreateOrderItems(ctx echo.Context) error {
 
 	return helper.BuildResponse(ctx, true, helper.SUCCEEDPOSTDATA, "", res, http.StatusOK)
 }
-func (oric *OrderItemsControllerImpl) UpdateOrderItemsByID(ctx echo.Context) error {
+func (oric *orderItemsControllerImpl) UpdateOrderItemsByID(ctx echo.Context) error {
 	orderitemsid := ctx.Param("orderitemsid")
 	orderItemsIdInt, errConv := strconv.Atoi(orderitemsid)
 	if errConv != nil {
@@ -93,7 +93,7 @@ func (oric *OrderItemsControllerImpl) UpdateOrderItemsByID(ctx echo.Context) err
 
 	return helper.BuildResponse(ctx, true, helper.SUCCEEDUPDATEDATA, "", res, http.StatusOK)
 }
-func (oric *OrderItemsControllerImpl) DeleteOrderItemsByID(ctx echo.Context) error {
+func (oric *orderItemsControllerImpl) DeleteOrderItemsByID(ctx echo.Context) error {
 	orderitemsid := ctx.Param("orderitemsid")
 	orderItemsIdInt, errConv := strconv.Atoi(orderitemsid)
 	if errConv != nil {

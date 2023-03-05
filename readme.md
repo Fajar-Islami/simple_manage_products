@@ -8,3 +8,4 @@
 [ ] validate price on order items
 [ ] validate expire date on order items
 [ ] Data tetep bisa terupdate dengan zero value
+[ ] Log post reqeust

@@ -16,14 +16,14 @@ func NewAuthRepository(db *gorm.DB) daos.AuthRepository {
 		db: db,
 	}
 }
-func (alr *AuthRepositoryImpl) LoginUser(ctx context.Context, params daos.User) (res daos.User, err error) {
-	if err := alr.db.WithContext(ctx).First(&res, "username = ? and password = ?", params.Username, params.Password).Error; err != nil {
+func (alr *AuthRepositoryImpl) LoginUser(ctx context.Context, username string) (res daos.User, err error) {
+	if err := alr.db.WithContext(ctx).First(&res, "username = ?", username).Error; err != nil {
 		return res, err
 	}
 	return res, nil
 }
 
-func (alr *AuthRepositoryImpl) CreateUser(ctx context.Context, params daos.User) (res uint, err error) {
+func (alr *AuthRepositoryImpl) RegisterUser(ctx context.Context, params daos.User) (res uint, err error) {
 	result := alr.db.WithContext(ctx).Create(&params)
 	if result.Error != nil {
 		return res, result.Error

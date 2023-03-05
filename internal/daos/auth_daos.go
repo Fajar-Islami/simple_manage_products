@@ -5,6 +5,6 @@ import (
 )
 
 type AuthRepository interface {
-	LoginUser(ctx context.Context, params User) (res User, err error)
-	CreateUser(ctx context.Context, params User) (res uint, err error)
+	LoginUser(ctx context.Context, username string) (res User, err error)
+	RegisterUser(ctx context.Context, params User) (res uint, err error)
 }
