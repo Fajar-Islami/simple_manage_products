@@ -114,10 +114,6 @@ func (oriu *authUseCaseImpl) RegisterUser(ctx echo.Context, params dtos.Register
 }
 
 func (oriu *authUseCaseImpl) generateToken(params daos.User) (res string, err error) {
-	// claims := utils.Claims{}
-	// claims["username"] = params.Username
-	// claims["id"] = params.ID
-	// claims["exp"] = time.Now().Add(48 * time.Hour).Unix()
 
 	token, errGenerateToken := utils.GenerateToken(params.ID, params.FullName)
 	if errGenerateToken != nil {

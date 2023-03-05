@@ -19,6 +19,7 @@ type (
 		Limit, Offset                int
 		Name                         string
 		PriceMoreThan, PriceLessThan int
+		WithExpired                  bool
 	}
 )
 

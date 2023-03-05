@@ -12,6 +12,7 @@ type (
 		Name          string `query:"name"`
 		PriceMoreThan int    `query:"price_more_than" validate:"omitempty,gt=0"`
 		PriceLessThan int    `query:"price_less_than" validate:"omitempty,gt=0"`
+		WithExpired   bool   `query:"with_expired" `
 	}
 
 	ReqDataOrderItems struct {

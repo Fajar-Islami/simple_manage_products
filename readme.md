@@ -1,11 +1,4 @@
-## TODO
+# Why clean architecture is good for your application ? if yes, please explain
 
-### Major
-[ ] Write log to file
-[ ] Redis when get order items by id
 
-### Minor
-[ ] validate price on order items
-[ ] validate expire date on order items
-[ ] Data tetep bisa terupdate dengan zero value
-[ ] Log post reqeust
+# How to scale up your application and when it needs to be

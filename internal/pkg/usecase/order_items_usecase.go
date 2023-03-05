@@ -8,7 +8,7 @@ import (
 	"github.com/Fajar-Islami/simple_manage_products/internal/daos"
 	"github.com/Fajar-Islami/simple_manage_products/internal/helper"
 	"github.com/Fajar-Islami/simple_manage_products/internal/pkg/dtos"
-	"github.com/Fajar-Islami/simple_manage_products/internal/pkg/repository/mysql_repo/redis_repo"
+	"github.com/Fajar-Islami/simple_manage_products/internal/pkg/repository/redis_repo"
 	"github.com/Fajar-Islami/simple_manage_products/internal/utils"
 
 	"github.com/labstack/echo/v4"
@@ -61,6 +61,7 @@ func (oriu *orderItemsUseCaseImpl) GetAllOrderItems(ctx echo.Context, params dto
 		PriceMoreThan: params.PriceMoreThan,
 		PriceLessThan: params.PriceLessThan,
 		Name:          params.Name,
+		WithExpired:   params.WithExpired,
 	})
 
 	if errors.Is(errRepo, gorm.ErrRecordNotFound) {

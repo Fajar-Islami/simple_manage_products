@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 )
 
-func LoggerMiddleware(log zerolog.Logger) echo.MiddlewareFunc {
+func LoggerMiddleware(log *zerolog.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {
 			reqBody, err := hookRequest(c)
@@ -24,10 +25,10 @@ func LoggerMiddleware(log zerolog.Logger) echo.MiddlewareFunc {
 			}
 
 			logger := log.With().
+				Time("time", time.Now()).
 				Str("request_id", c.Response().Header().Get(echo.HeaderXRequestID)).
 				Str("method", c.Request().Method).
 				Str("uri", c.Request().RequestURI).
-				// Bytes("body", reqBody).
 				RawJSON("raw body", jsonCompact.Bytes()).
 				Str("remote_ip", c.RealIP()).
 				Logger()

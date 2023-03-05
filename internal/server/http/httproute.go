@@ -13,11 +13,11 @@ import (
 
 func HTTPRouteInit(cont *container.Container, containerConf *container.Container) {
 	e := echo.New()
+	e.Validator = NewValidator()
 
 	e.Use(middleware.AddTrailingSlash())
 	e.Use(middleware.Recover())
-	e.Use(LoggerMiddleware(*containerConf.Logger))
-	e.Validator = NewValidator()
+	e.Use(LoggerMiddleware(&containerConf.Logger.Log))
 	// e.Use(middleware.JWT([]byte(containerConf.Apps.SecretJwt)))
 	utils.SecretKey = containerConf.Apps.SecretJwt
 
@@ -25,6 +25,7 @@ func HTTPRouteInit(cont *container.Container, containerConf *container.Container
 	handler.OrderItemsRoute(api, containerConf)
 	handler.AuthRoute(api, containerConf)
 	handler.UserRoute(api, containerConf, AuthMiddleware)
+	handler.OrderHistoryRoute(api, containerConf, AuthMiddleware)
 
 	port := fmt.Sprintf("%s:%d", containerConf.Apps.Host, containerConf.Apps.HttpPort)
 	e.Logger.Fatal(e.Start(port))

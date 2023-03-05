@@ -32,11 +32,15 @@ func (oir *OrderItemsRepositoryImpl) GetAllOrderItems(ctx context.Context, param
 		db = db.Where("price > ?", params.PriceMoreThan)
 	}
 
-	if err := db.WithContext(ctx).Order("name asc").Limit(params.Limit).Offset(params.Offset).Find(&res).Error; err != nil {
+	if !params.WithExpired {
+		db = db.Where("expired_at > CURDATE()")
+	}
+
+	if err := db.WithContext(ctx).Order("expired_at desc").Limit(params.Limit).Offset(params.Offset).Find(&res).Error; err != nil {
 		return res, count, err
 	}
 
-	if err := db.WithContext(ctx).Order("name asc").Model(&res).Count(&count).Error; err != nil {
+	if err := db.WithContext(ctx).Order("expired_at desc").Model(&res).Count(&count).Error; err != nil {
 		return res, count, err
 	}
 	return res, count, nil

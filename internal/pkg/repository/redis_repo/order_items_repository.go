@@ -31,13 +31,12 @@ func NewRedisRepoOrderItems(redisClient *redis.Client, logger *zerolog.Logger) R
 	}
 }
 
-var key = "orderitems:"
-
 func keyOrderItemsGenerator(id int) string {
+	var key = "orderitems:"
 	return fmt.Sprint(key, id)
 }
 
-var expireTime = time.Minute * time.Duration(10)
+var expireTimeOrderItems = time.Minute * time.Duration(10)
 
 func (roi *redisOrderItemsRepoImpl) GetOrderItemsCtx(ctx context.Context, orderitemsid int) (*dtos.ResDataOrderItemsData, error) {
 
@@ -75,7 +74,7 @@ func (roi *redisOrderItemsRepoImpl) SetOrderItemsCtx(ctx context.Context, data *
 		return errors.Wrap(err, "orderItemRedisRepo.SetOrderItemsCtx.redisClient.set")
 	}
 
-	if err = roi.redisClient.Expire(ctx, realKey, expireTime).Err(); err != nil {
+	if err = roi.redisClient.Expire(ctx, realKey, expireTimeOrderItems).Err(); err != nil {
 		return errors.Wrap(err, "orderItemRedisRepo.SetOrderItemsCtx.redisClient.set")
 	}
 

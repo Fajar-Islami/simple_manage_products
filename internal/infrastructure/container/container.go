@@ -25,8 +25,12 @@ type (
 	Container struct {
 		Mysqldb *gorm.DB
 		Apps    *Apps
-		Logger  *zerolog.Logger
+		Logger  *Logger
 		Redis   *redis.Client
+	}
+
+	Logger struct {
+		Log zerolog.Logger
 	}
 
 	Apps struct {
@@ -83,9 +87,12 @@ func AppsInit(v *viper.Viper) (apps Apps) {
 	return
 }
 
-func LoggerInit() zerolog.Logger {
+func LoggerInit() *Logger {
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
-	return zerolog.New(os.Stdout)
+
+	return &Logger{
+		Log: zerolog.New(os.Stdout).With().Caller().Timestamp().Logger(),
+	}
 }
 
 func InitContainer() (cont *Container) {
@@ -97,7 +104,7 @@ func InitContainer() (cont *Container) {
 	return &Container{
 		Apps:    &apps,
 		Mysqldb: mysqldb,
-		Logger:  &logger,
+		Logger:  logger,
 		Redis:   redisClient,
 	}
 
