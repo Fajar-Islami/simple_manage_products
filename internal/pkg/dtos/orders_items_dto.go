@@ -1,6 +1,7 @@
 package dtos
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -37,3 +38,11 @@ type (
 		ExpiredAt time.Time `json:"expired_at"`
 	}
 )
+
+func (rdoi *ResDataOrderItemsData) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &rdoi); err != nil {
+		return err
+	}
+
+	return nil
+}
