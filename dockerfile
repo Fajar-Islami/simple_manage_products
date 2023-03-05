@@ -15,7 +15,7 @@ FROM alpine:3.9
 
 # Copy bin file
 COPY --from=build /app/example/dist/example /app/example
-COPY .env /.env
+COPY logs /logs
 # VOLUME ["/logs"]
 # ARG APP_ENV
 

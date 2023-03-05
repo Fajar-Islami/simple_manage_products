@@ -3,6 +3,12 @@ include .env
 export 
 
 
+registry:=ghcr.io
+username:=fajar-islami
+image:=simple_manage_products
+tags:=latest
+
+
 git-add:
 	git add .
 	git commit -am '${cmt}'
@@ -47,7 +53,7 @@ logs:
 	docker compose logs -f
 
 build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o  ./dist/example ./app/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o  ./dist/example ./main.go
 
 dockerbuild:
 	docker build --rm -t ${appName} .
@@ -62,3 +68,9 @@ dockerrm:
 
 dockeenter:
 	docker exec -it ${appName} bash
+
+push-image:
+	docker build -t ${registry}/${username}/${image}:${tags} .
+	export CR_PAT=${CR_PAT}
+	echo ${CR_PAT} | docker login ${registry} -u ${USERNAME} --password-stdin
+	docker push ${registry}/${username}/${image}:${tags}

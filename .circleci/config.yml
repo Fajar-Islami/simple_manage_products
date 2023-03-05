@@ -1,0 +1,42 @@
+
+
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.2.0
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  build-app:
+      docker: # base image golang
+      - image: circleci/golang:1.15.8
+      steps:
+        - checkout # Agar CircleCI memiliki akses ke code
+        - run:
+            name: Run tests
+            command: make build
+  dockerize: ## name of jobs
+      executor: docker/machine
+      steps:
+        - checkout # Agar CircleCI memiliki akses ke code
+        - docker/dockerlint:  # install dockerlint
+            dockerfile: ./Dockerfile  # path dockerfile
+            treat-warnings-as-errors: true ## failed if get warning
+  build-and-push:
+      executor: docker/docker 
+      steps:
+        - checkout
+        - setup_remote_docker #setup remote Docker engine to using docker command 
+        - run:
+            name: Build and push image
+            command: make push-image
+
+workflows:
+  push-image:
+    jobs:
+      - build-app
+      - dockerize
+      - build-and-push
