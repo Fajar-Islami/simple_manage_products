@@ -9,30 +9,6 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// func LoggerMiddleware(app *echo.Echo, log zerolog.Logger) echo.MiddlewareFunc {
-// 	return middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-// 		LogURI:        true,
-// 		LogStatus:     true,
-// 		LogLatency:    true,
-// 		LogURIPath:    true,
-// 		LogFormValues: middleware.DefaultCORSConfig.AllowHeaders,
-// 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-// 			log.Info().
-// 				Str("URI", v.URI).
-// 				Str("URIPATH", v.URIPath).
-// 				Int("status", v.Status).
-// 				Str("user-agent", v.UserAgent).
-// 				Interface("headers", v.Headers).
-// 				Interface("body", v.FormValues).
-// 				Interface("body", v.FormValues).
-// 				Msg("request")
-
-// 			return nil
-// 		},
-// 	})
-
-// }
-
 func LoggerMiddleware(log zerolog.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {

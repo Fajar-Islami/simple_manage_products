@@ -7,8 +7,8 @@ import (
 
 type (
 	FilterOrderItems struct {
-		Limit         int    `query:"limit"`
-		Page          int    `query:"page"`
+		Limit         int    `query:"limit" validate:"omitempty,gt=0"`
+		Page          int    `query:"page" validate:"omitempty,gt=0"`
 		Name          string `query:"name"`
 		PriceMoreThan int    `query:"price_more_than" validate:"omitempty,gt=0"`
 		PriceLessThan int    `query:"price_less_than" validate:"omitempty,gt=0"`

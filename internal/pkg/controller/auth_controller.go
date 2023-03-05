@@ -25,14 +25,14 @@ func NewAuthController(authsusecase usecase.AuthUseCase) AuthController {
 	}
 }
 
-func (oric *authControllerImpl) LoginUser(ctx echo.Context) error {
+func (aco *authControllerImpl) LoginUser(ctx echo.Context) error {
 	params := new(dtos.LoginRequest)
 	if err := ctx.Bind(params); err != nil {
 		log.Println(err)
 		return helper.BuildResponse(ctx, false, helper.FAILEDPOSTDATA, err.Error(), nil, http.StatusBadRequest)
 	}
 
-	res, err := oric.authsusecase.LoginUser(ctx, *params)
+	res, err := aco.authsusecase.LoginUser(ctx, *params)
 	if err != nil {
 		return helper.BuildResponse(ctx, false, helper.FAILEDPOSTDATA, err.Err.Error(), nil, err.Code)
 	}
@@ -40,14 +40,14 @@ func (oric *authControllerImpl) LoginUser(ctx echo.Context) error {
 	return helper.BuildResponse(ctx, true, helper.SUCCEEDPOSTDATA, "", res, http.StatusOK)
 }
 
-func (oric *authControllerImpl) RegisterUser(ctx echo.Context) error {
+func (aco *authControllerImpl) RegisterUser(ctx echo.Context) error {
 	params := new(dtos.RegisterRequest)
 	if err := ctx.Bind(params); err != nil {
 		log.Println(err)
 		return helper.BuildResponse(ctx, false, helper.FAILEDPOSTDATA, err.Error(), nil, http.StatusBadRequest)
 	}
 
-	res, err := oric.authsusecase.RegisterUser(ctx, *params)
+	res, err := aco.authsusecase.RegisterUser(ctx, *params)
 	if err != nil {
 		return helper.BuildResponse(ctx, false, helper.FAILEDPOSTDATA, err.Err.Error(), nil, err.Code)
 	}

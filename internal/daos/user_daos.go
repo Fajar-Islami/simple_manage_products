@@ -23,7 +23,7 @@ type (
 )
 
 type UsersRepository interface {
-	GetAllUserProfile(ctx context.Context, params FilterUser) (res []User, err error)
+	GetAllUserProfile(ctx context.Context, params FilterUser) (res []User, count int64, err error)
 	GetMyUserByID(ctx context.Context, userid int) (res User, err error)
 	UpdateUserProfileByID(ctx context.Context, userid int, data User) (res string, err error)
 	DeleteUserProfileByID(ctx context.Context, userid int) (res string, err error)

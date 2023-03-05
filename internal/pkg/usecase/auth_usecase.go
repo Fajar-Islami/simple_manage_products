@@ -4,14 +4,12 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/Fajar-Islami/simple_manage_products/internal/daos"
 	"github.com/Fajar-Islami/simple_manage_products/internal/helper"
 	"github.com/Fajar-Islami/simple_manage_products/internal/pkg/dtos"
 	"github.com/Fajar-Islami/simple_manage_products/internal/utils"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 
 	"gorm.io/gorm"
@@ -116,12 +114,12 @@ func (oriu *authUseCaseImpl) RegisterUser(ctx echo.Context, params dtos.Register
 }
 
 func (oriu *authUseCaseImpl) generateToken(params daos.User) (res string, err error) {
-	claims := jwt.MapClaims{}
-	claims["username"] = params.Username
-	claims["id"] = params.ID
-	claims["exp"] = time.Now().Add(48 * time.Hour).Unix()
+	// claims := utils.Claims{}
+	// claims["username"] = params.Username
+	// claims["id"] = params.ID
+	// claims["exp"] = time.Now().Add(48 * time.Hour).Unix()
 
-	token, errGenerateToken := utils.GenerateToken(&claims)
+	token, errGenerateToken := utils.GenerateToken(params.ID, params.FullName)
 	if errGenerateToken != nil {
 		log.Println(errGenerateToken)
 		return res, err

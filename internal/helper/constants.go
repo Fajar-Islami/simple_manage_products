@@ -11,6 +11,8 @@ const FAILEDPOSTDATA = "Failed to POST data"
 const SUCCEEDPOSTDATA = "Succeed to POST data"
 const FAILEDUPDATEDATA = "Failed to UPDATE data"
 const SUCCEEDUPDATEDATA = "Succeed to UPDATE data"
+const FAILEDDELETEDATA = "Failed to DELETE data"
+const SUCCEEDDELETEDATA = "Succeed to DELETE data"
 
 var (
 	// Get current file full path from runtime

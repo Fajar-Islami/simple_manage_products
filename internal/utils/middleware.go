@@ -1,3 +1,5 @@
 package utils
 
-// @TODO : make middleware like Auth
+import "github.com/labstack/echo/v4"
+
+type MiddlewareType func(next echo.HandlerFunc) echo.HandlerFunc

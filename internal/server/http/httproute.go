@@ -24,6 +24,7 @@ func HTTPRouteInit(cont *container.Container, containerConf *container.Container
 	api := e.Group("/api/v1") // /api
 	handler.OrderItemsRoute(api, containerConf)
 	handler.AuthRoute(api, containerConf)
+	handler.UserRoute(api, containerConf, AuthMiddleware)
 
 	port := fmt.Sprintf("%s:%d", containerConf.Apps.Host, containerConf.Apps.HttpPort)
 	e.Logger.Fatal(e.Start(port))
