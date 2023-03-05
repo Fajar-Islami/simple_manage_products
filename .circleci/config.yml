@@ -12,7 +12,7 @@ orbs:
 jobs:
   build-app:
       docker: # base image golang
-      - image: circleci/golang:1.15.8
+      - image: circleci/golang:1.19.2
       steps:
         - checkout # Agar CircleCI memiliki akses ke code
         - run:

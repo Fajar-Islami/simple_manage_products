@@ -10,15 +10,9 @@ RUN make build
 # Now copy it into our base image.
 FROM alpine:3.9
 
-# Copy configs files
-# COPY resources/config.yaml.prod /resources/config.yaml
-
 # Copy bin file
 COPY --from=build /app/example/dist/example /app/example
-COPY logs /logs
-# VOLUME ["/logs"]
-# ARG APP_ENV
+RUN mkdir /logs
 
-# ENV APP_ENV ${APP_ENV}
 EXPOSE 8000
 ENTRYPOINT ["/app/example"]
