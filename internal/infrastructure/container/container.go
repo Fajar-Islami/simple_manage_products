@@ -1,7 +1,9 @@
 package container
 
 import (
+	"context"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,7 +13,9 @@ import (
 	redisclient "github.com/Fajar-Islami/simple_manage_products/internal/infrastructure/redis"
 	"github.com/go-redis/redis/v8"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -30,7 +34,9 @@ type (
 	}
 
 	Logger struct {
-		Log zerolog.Logger
+		Log     zerolog.Logger
+		Path    string `mapstructure:"log_path"`
+		LogFile string `mapstructure:"log_file"`
 	}
 
 	Apps struct {
@@ -87,25 +93,62 @@ func AppsInit(v *viper.Viper) (apps Apps) {
 	return
 }
 
-func LoggerInit() *Logger {
+func LoggerInit(v *viper.Viper) (logger Logger) {
+	err := v.Unmarshal(&logger)
+	if err != nil {
+		helper.Logger(currentfilepath, helper.LoggerLevelError, "", fmt.Errorf("error when unmarshal configuration file : ", err.Error()))
+	}
+
+	var stdout io.Writer = os.Stdout
+	// var multi zerolog.LevelWriter = os.Stdout
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	return &Logger{
-		Log: zerolog.New(os.Stdout).With().Caller().Timestamp().Logger(),
+	if logger.LogFile == "ON" {
+		path := fmt.Sprintf("%s/logs/request.log", helper.ProjectRootPath)
+		file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+			0664)
+		if err != nil {
+			log.Error().Err(err)
+		}
+		// Create a multi writer with both the console and file writers
+		stdout = zerolog.MultiLevelWriter(zerolog.ConsoleWriter{Out: os.Stdout}, file)
+
+	}
+
+	return Logger{
+		Log: zerolog.New(stdout).With().Caller().Timestamp().Logger(),
 	}
 }
 
-func InitContainer() (cont *Container) {
-	apps := AppsInit(v)
-	mysqldb := mysql.DatabaseInit(v)
-	logger := LoggerInit()
-	redisClient := redisclient.NewRedisClient(v)
+func InitContainer() *Container {
+	var cont Container
+	errGroup, _ := errgroup.WithContext(context.Background())
 
-	return &Container{
-		Apps:    &apps,
-		Mysqldb: mysqldb,
-		Logger:  logger,
-		Redis:   redisClient,
-	}
+	errGroup.Go(func() (err error) {
+		apps := AppsInit(v)
+		cont.Apps = &apps
+		return
+	})
 
+	errGroup.Go(func() (err error) {
+		mysqldb := mysql.DatabaseInit(v)
+		cont.Mysqldb = mysqldb
+		return
+	})
+
+	errGroup.Go(func() (err error) {
+		logger := LoggerInit(v)
+		cont.Logger = &logger
+		return
+	})
+
+	errGroup.Go(func() (err error) {
+		redisClient := redisclient.NewRedisClient(v)
+		cont.Redis = redisClient
+		return
+	})
+
+	_ = errGroup.Wait()
+
+	return &cont
 }

@@ -18,7 +18,7 @@ func HTTPRouteInit(cont *container.Container, containerConf *container.Container
 	e.Use(middleware.AddTrailingSlash())
 	e.Use(middleware.Recover())
 	e.Use(LoggerMiddleware(&containerConf.Logger.Log))
-	// e.Use(middleware.JWT([]byte(containerConf.Apps.SecretJwt)))
+
 	utils.SecretKey = containerConf.Apps.SecretJwt
 
 	api := e.Group("/api/v1") // /api

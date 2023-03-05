@@ -51,47 +51,45 @@ func (ohr *OrderHistoryRepositoryImpl) CreateOrderHistory(ctx context.Context, d
 	var userData daos.User
 	var orderItems daos.OrderItems
 
-	db := ohr.db.WithContext(ctx).Begin()
-
-	// @@TODO use goroutine
+	tx := ohr.db.WithContext(ctx).Begin()
 
 	// Check if user first oder
-	if err := db.Debug().Select("id,first_order").Find(&userData, "id = ?", data.UserID).Error; err != nil {
+	if err := tx.Debug().Select("id,first_order").Find(&userData, "id = ?", data.UserID).Error; err != nil {
 		msg := "Get data user failed for checking is first order"
 		if err == nil && userData.ID == 0 {
 			err = fmt.Errorf(msg)
 		}
 		ohr.logger.Log.Error().Err(err).Stack().Msg("Get data user failed for checking is first order")
-		db.Rollback()
+		tx.Rollback()
 		return res, gorm.ErrRecordNotFound
 	}
 
 	if userData.FirstOrder == nil {
 		now := time.Now()
 		userData.FirstOrder = &now
-		if err := db.Debug().Model(userData).Update("first_order", now).Where("id = ?", data.UserID).Error; err != nil {
+		if err := tx.Debug().Model(userData).Update("first_order", now).Where("id = ?", data.UserID).Error; err != nil {
 			ohr.logger.Log.Error().Err(err).Stack().Msg("update data user first order failed")
-			db.Rollback()
+			tx.Rollback()
 			return res, err
 		}
 	}
 
 	// Check if item not expire
-	if err := db.Debug().Select("id,expired_at").First(&orderItems, "id = ? and expired_at > CURDATE()", data.OrderItemID).Error; err != nil || orderItems.ID == 0 {
+	if err := tx.Debug().Select("id,expired_at").First(&orderItems, "id = ? and expired_at > CURDATE()", data.OrderItemID).Error; err != nil || orderItems.ID == 0 {
 		ohr.logger.Log.Error().Stack().Err(err).Msg("Data not found")
-		db.Rollback()
+		tx.Rollback()
 		return res, gorm.ErrRecordNotFound
 	}
 
 	// Insert Data
-	result := db.Debug().Create(&data)
+	result := tx.Debug().Create(&data)
 	if result.Error != nil {
 		ohr.logger.Log.Error().Stack().Err(err).Msg("")
-		db.Rollback()
+		tx.Rollback()
 		return res, result.Error
 	}
 
-	db.Commit()
+	tx.Commit()
 
 	return int(data.ID), nil
 }
@@ -100,30 +98,30 @@ func (ohr *OrderHistoryRepositoryImpl) UpdateOrderHistoryByID(ctx context.Contex
 	var dataOrderHistory daos.OrderHistory
 	var orderItems daos.OrderItems
 
-	db := ohr.db.WithContext(ctx).Begin()
+	tx := ohr.db.WithContext(ctx).Begin()
 
 	// Check data if exist
-	if err = db.Where("id = ? and user_id = ?", historyid, userid).First(&dataOrderHistory).Error; err != nil {
+	if err = tx.Where("id = ? and user_id = ?", historyid, userid).First(&dataOrderHistory).Error; err != nil {
 		ohr.logger.Log.Error().Stack().Err(err).Msg("Data not found")
-		db.Rollback()
+		tx.Rollback()
 		return res, gorm.ErrRecordNotFound
 	}
 
 	// Check if item not expire
-	if err := db.Select("id,expired_at").First(&orderItems, "id = ? and expired_at > CURDATE()", data.OrderItemID).Error; err != nil || orderItems.ID == 0 {
+	if err := tx.Select("id,expired_at").First(&orderItems, "id = ? and expired_at > CURDATE()", data.OrderItemID).Error; err != nil || orderItems.ID == 0 {
 		ohr.logger.Log.Error().Stack().Err(err).Msg("Data not found")
-		db.Rollback()
+		tx.Rollback()
 		return res, gorm.ErrRecordNotFound
 	}
 
 	// Update Data
-	if err := db.Debug().Model(dataOrderHistory).Updates(&data).Where("id = ? and user_id = ?", historyid, userid).Error; err != nil {
+	if err := tx.Debug().Model(dataOrderHistory).Updates(&data).Where("id = ? and user_id = ?", historyid, userid).Error; err != nil {
 		ohr.logger.Log.Error().Stack().Err(err).Msg("Update data failed")
-		db.Rollback()
+		tx.Rollback()
 		return helper.UpdateDataFailed, err
 	}
 
-	db.Commit()
+	tx.Commit()
 
 	return helper.UpdateDataSucceed, nil
 }
