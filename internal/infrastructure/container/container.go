@@ -111,7 +111,7 @@ func LoggerInit(v *viper.Viper) (logger Logger) {
 			log.Error().Err(err)
 		}
 		// Create a multi writer with both the console and file writers
-		stdout = zerolog.MultiLevelWriter(zerolog.ConsoleWriter{Out: os.Stdout}, file)
+		stdout = zerolog.MultiLevelWriter(os.Stdout, file)
 
 	}
 
