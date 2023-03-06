@@ -72,6 +72,6 @@ dockeenter:
 push-image:
 	docker build -t ${registry}/${username}/${image}:${tags} .
 	export CR_PAT=${CR_PAT}
-	echo ${CR_PAT} | docker login ${registry} -u ${USERNAME} --password-stdin -interactive --tty
+	echo ${CR_PAT} | docker login ${registry} -u ${USERNAME} --password-stdin
 	docker push ${registry}/${username}/${image}:${tags}
 
