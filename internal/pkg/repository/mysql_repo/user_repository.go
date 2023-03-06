@@ -48,7 +48,7 @@ func (ur *UsersRepositoryImpl) UpdateUserProfileByID(ctx context.Context, userid
 		return "Update user failed", gorm.ErrRecordNotFound
 	}
 
-	if err := ur.db.Model(dataUsers).Updates(&data).Where("id = ? ", userid).Error; err != nil {
+	if err := ur.db.WithContext(ctx).Model(dataUsers).Updates(&data).Where("id = ? ", userid).Error; err != nil {
 		return "Update user failed", err
 	}
 
@@ -61,7 +61,7 @@ func (ur *UsersRepositoryImpl) DeleteUserProfileByID(ctx context.Context, userid
 		return "Delete user failed", gorm.ErrRecordNotFound
 	}
 
-	if err := ur.db.Model(dataUsers).Delete(&dataUsers).Error; err != nil {
+	if err := ur.db.WithContext(ctx).Model(dataUsers).Delete(&dataUsers).Error; err != nil {
 		return "Delete user failed", err
 	}
 

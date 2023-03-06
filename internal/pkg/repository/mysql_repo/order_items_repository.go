@@ -65,11 +65,11 @@ func (oir *OrderItemsRepositoryImpl) CreateOrderItems(ctx context.Context, data 
 func (oir *OrderItemsRepositoryImpl) UpdateOrderItemsByID(ctx context.Context, orderItemsid int, data daos.OrderItems) (res string, err error) {
 	var dataOrderItems daos.OrderItems
 	// Get first
-	if err = oir.db.Where("id = ? ", orderItemsid).First(&dataOrderItems).WithContext(ctx).Error; err != nil {
+	if err = oir.db.WithContext(ctx).Where("id = ? ", orderItemsid).First(&dataOrderItems).Error; err != nil {
 		return "Update Order Item failed", gorm.ErrRecordNotFound
 	}
 
-	if err := oir.db.Model(dataOrderItems).Updates(&data).Where("id = ? ", orderItemsid).Error; err != nil {
+	if err := oir.db.WithContext(ctx).Model(dataOrderItems).Updates(&data).Where("id = ? ", orderItemsid).Error; err != nil {
 		return "Update Order Item failed", err
 	}
 
@@ -80,11 +80,11 @@ func (oir *OrderItemsRepositoryImpl) DeleteOrderItemsByID(ctx context.Context, o
 	var dataOrderItems daos.OrderItems
 
 	// Get First
-	if err = oir.db.Where("id = ?", orderItemsid).First(&dataOrderItems).WithContext(ctx).Error; err != nil {
+	if err = oir.db.WithContext(ctx).Where("id = ?", orderItemsid).First(&dataOrderItems).Error; err != nil {
 		return "Delete Order Items failed", gorm.ErrRecordNotFound
 	}
 
-	if err := oir.db.Model(dataOrderItems).Delete(&dataOrderItems).Error; err != nil {
+	if err := oir.db.WithContext(ctx).Model(dataOrderItems).Delete(&dataOrderItems).Error; err != nil {
 		return "Delete Order Items failed", err
 	}
 

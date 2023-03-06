@@ -1,6 +1,9 @@
 package utils
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 const (
 	mmLayout       = "January"
@@ -12,7 +15,7 @@ const (
 func ShortDateFromString(ds string) (time.Time, error) {
 	t, err := time.Parse(ddmmyyyyLayout, ds)
 	if err != nil {
-		return t, err
+		return t, fmt.Errorf("Data format must be DD/MM/YYYY")
 	}
 	return t, nil
 }

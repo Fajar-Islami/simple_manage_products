@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Fajar-Islami/simple_manage_products/internal/daos"
 	"github.com/Fajar-Islami/simple_manage_products/internal/helper"
@@ -53,6 +54,15 @@ func (oriu *orderItemsUseCaseImpl) GetAllOrderItems(ctx echo.Context, params dto
 		params.Page = 0
 	} else {
 		params.Page = (params.Page - 1) * params.Limit
+	}
+
+	if params.PriceLessThan > 0 && params.PriceMoreThan > 0 {
+		if params.PriceLessThan > params.PriceMoreThan {
+			return res, &helper.ErrorStruct{
+				Code: http.StatusBadRequest,
+				Err:  errors.New("price_less_than must be smaller than price_more_than"),
+			}
+		}
 	}
 
 	resRepo, count, errRepo := oriu.orderitemsrepository.GetAllOrderItems(ctx.Request().Context(), daos.FilterOrderItems{
@@ -160,6 +170,13 @@ func (oriu *orderItemsUseCaseImpl) CreateOrderItems(ctx echo.Context, params dto
 		return res, &helper.ErrorStruct{
 			Code: http.StatusBadRequest,
 			Err:  errTgl,
+		}
+	}
+
+	if expireDate.Before(time.Now()) {
+		return res, &helper.ErrorStruct{
+			Code: http.StatusBadRequest,
+			Err:  errors.New("Expired date is already passed"),
 		}
 	}
 
